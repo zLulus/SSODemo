@@ -12,9 +12,14 @@ namespace QuickstartIdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             // configure identity server with in-memory stores, keys, clients and scopes
-            services.AddIdentityServer()
+            //配置IdentityServer服务
+            services
+                //在DI系统里面添加IdentityServer,为运行时状态注册内存存储
+                .AddIdentityServer()
                 .AddDeveloperSigningCredential()
+                //范围定义了您系统中的API资源列表
                 .AddInMemoryApiResources(Config.GetApiResources())
+                //客户Client列表
                 .AddInMemoryClients(Config.GetClients());
         }
 
