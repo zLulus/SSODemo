@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using IdentityServerApi.EntityFramework;
 
 namespace IdentityServerApi
 {
@@ -33,6 +35,11 @@ namespace IdentityServerApi
                 .AddInMemoryApiResources(Config.GetApiResources())
                 //客户Client列表
                 .AddInMemoryClients(Config.GetClients());
+
+            //添加ef的依赖  
+            string c = Configuration.GetConnectionString("SSODemoConnection");
+            var connection = "server=115.28.102.108;uid=sa;pwd=Woshizenglu9501;database=SSODemoDb";
+            services.AddDbContext<SSOContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +65,7 @@ namespace IdentityServerApi
             });
 
             app.UseIdentityServer();
+            
         }
     }
 }

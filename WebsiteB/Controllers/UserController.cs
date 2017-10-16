@@ -23,6 +23,7 @@ namespace WebsiteB.Controllers
             client.SetBearerToken(Token);
 
             var response = client.GetAsync("http://localhost:5001/identity").Result;
+            //todo 
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -37,6 +38,7 @@ namespace WebsiteB.Controllers
                 //登录成功
                 var content = response.Content.ReadAsStringAsync().Result;
                 //读取用户信息
+
                 Console.WriteLine(JArray.Parse(content));
                 //todo 设置该网站状态为登陆成功
                 return Json(new
