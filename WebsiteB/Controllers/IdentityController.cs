@@ -18,7 +18,7 @@ namespace WebsiteB.Controllers
         public IActionResult Get()
         {
             //使用该控制器来测试授权需求，并通过API的眼睛对索赔标识进行可视化
-            //return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
             var client = new HttpClient();
             //client.SetBearerToken(Token);
             //todo 如何确认某个用户？

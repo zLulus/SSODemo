@@ -38,11 +38,17 @@ namespace WebsiteB
 
                     options.ApiName = "api1";
                 });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //顺序不能错，先验证再路由，错了会授权失败
+            //将身份验证中间件添加到管道中，以便在每次对主机的调用中自动执行身份验证
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,8 +68,7 @@ namespace WebsiteB
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //将身份验证中间件添加到管道中，以便在每次对主机的调用中自动执行身份验证
-            app.UseAuthentication();
+            
         }
     }
 }
