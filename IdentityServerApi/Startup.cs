@@ -36,6 +36,11 @@ namespace IdentityServerApi
                 //客户Client列表
                 .AddInMemoryClients(Config.GetClients());
 
+            //todo
+            //https://aspnetboilerplate.com/Pages/Documents/Zero/Identity-Server
+            //https://www.codeproject.com/Articles/1115763/Using-ASP-NET-Core-Entity-Framework-Core-and-ASP-N
+            //https://aspnetboilerplate.com/Pages/Documents/EntityFramework-Integration
+            //https://aspnetboilerplate.com/Pages/Documents
             //添加ef的依赖  
             string c = Configuration.GetConnectionString("SSODemoConnection");
             var connection = "server=115.28.102.108;uid=sa;pwd=Woshizenglu9501;database=SSODemoDb";
