@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using IdentityServerApi.EntityFramework;
+using AutoMapper;
 
 namespace IdentityServerApi
 {
@@ -45,6 +46,8 @@ namespace IdentityServerApi
             //string c = Configuration.GetConnectionString("SSODemoConnection");
             //var connection = "server=115.28.102.108;uid=sa;pwd=Woshizenglu9501;database=SSODemoDb";
             //services.AddDbContext<SSOContext>(options => options.UseSqlServer(connection));
+
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

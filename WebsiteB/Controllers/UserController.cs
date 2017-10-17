@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using Model.Dtos;
+using Newtonsoft.Json;
 
 namespace WebsiteB.Controllers
 {
@@ -16,14 +18,14 @@ namespace WebsiteB.Controllers
             return Redirect("http://localhost:5000/User/LogIn");
         }
 
-        public IActionResult CheckToken(string Token)
+        public IActionResult CheckToken(string token)
         {
             // call api
             var client = new HttpClient();
-            client.SetBearerToken(Token);
+            client.SetBearerToken(token);
 
-            var response = client.GetAsync("http://localhost:5001/identity").Result;
-            //todo 
+            var response = client.GetAsync($"http://localhost:5001/identity?token={token}").Result;
+            
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -38,8 +40,9 @@ namespace WebsiteB.Controllers
                 //登录成功
                 var content = response.Content.ReadAsStringAsync().Result;
                 //读取用户信息
+                GetUserOutput output = JsonConvert.DeserializeObject<GetUserOutput>(content);
+                
 
-                Console.WriteLine(JArray.Parse(content));
                 //todo 设置该网站状态为登陆成功
                 return Json(new
                 {

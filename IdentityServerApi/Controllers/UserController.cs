@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityServerApi.Dtos;
 using IdentityModel.Client;
 using System.Data.SqlClient;
+using IdentityServerApi.Cache.User;
+using Model.Dtos;
+using Model.Models;
+using AutoMapper;
 
 namespace IdentityServerApi.Controllers
 {
@@ -47,7 +51,11 @@ namespace IdentityServerApi.Controllers
                 }
                 else
                 {
-                    string url = $"http://localhost:5001/User/CheckToken?Token={tokenResponse.AccessToken}";
+                    //登录成功
+                    TokenCacheManager tokenCacheManager = new TokenCacheManager();
+                    //todo 如何缓存失败呢？
+                    bool r = tokenCacheManager.InsertToken(tokenResponse.AccessToken, "admin");
+                    string url = $"http://localhost:5001/User/CheckToken?token={tokenResponse.AccessToken}";
                     return Json(new
                     {
                         LogResult = true,
@@ -81,10 +89,24 @@ namespace IdentityServerApi.Controllers
         /// </summary>
         /// <param name="Token"></param>
         /// <returns></returns>
-        public IActionResult GetUser(string Token)
+        public IActionResult GetUser(string token)
         {
-            //todo
-            return null;
+            TokenCacheManager tokenCacheManager = new TokenCacheManager();
+            string userId= tokenCacheManager.GetUserId(token);
+            //查询用户信息
+            //todo 数据库
+            User u = new User()
+            {
+                Id = 1,
+                Account = "admin"
+            };
+            UserDto dto= Mapper.Map<User, UserDto>(u);
+            return Json(new GetUserOutput()
+            {
+                IsExist = userId != null,
+                UserId = userId,
+                User= dto
+            });
         }
     }
 }
