@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebsiteB.Models;
+using Microsoft.AspNetCore.Authorization;
+using WebsiteB.Helpers;
 
 namespace WebsiteB.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : FonourControllerBase
     {
         public IActionResult Index()
         {

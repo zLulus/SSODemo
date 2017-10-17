@@ -29,16 +29,18 @@ namespace IdentityServerApi.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public IActionResult TryLogIn(LogInDto input)
+        public async Task<IActionResult> TryLogIn(LogInDto input)
         {
             if(input.Account=="admin" && input.Password == "123456")
             {
                 // discover endpoints from metadata
-                var disco = DiscoveryClient.GetAsync("http://localhost:5000").Result;
+                var disco =await DiscoveryClient.GetAsync("http://localhost:5000");
 
+                //todo 应该把user加载到client列表里面，然后查询
                 // request token
+                //var tokenClient = new TokenClient(disco.TokenEndpoint, input.Account, input.Password);
                 var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
-                var tokenResponse = tokenClient.RequestClientCredentialsAsync("api1").Result;
+                var tokenResponse =await tokenClient.RequestClientCredentialsAsync("api1");
 
                 if (tokenResponse.IsError)
                 {

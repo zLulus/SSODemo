@@ -7,6 +7,10 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Model.Dtos;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Model.Models;
+using Microsoft.AspNetCore.Identity;
+using WebsiteB.Helpers;
 
 namespace WebsiteB.Controllers
 {
@@ -18,13 +22,13 @@ namespace WebsiteB.Controllers
             return Redirect("http://localhost:5000/User/LogIn");
         }
 
-        public IActionResult CheckToken(string token)
+        public async Task<IActionResult> CheckToken(string token)
         {
             // call api
             var client = new HttpClient();
             client.SetBearerToken(token);
 
-            var response = client.GetAsync($"http://localhost:5001/identity?token={token}").Result;
+            var response =await client.GetAsync($"http://localhost:5001/identity?token={token}");
             
             if (!response.IsSuccessStatusCode)
             {
@@ -38,17 +42,15 @@ namespace WebsiteB.Controllers
             else
             {
                 //登录成功
-                var content = response.Content.ReadAsStringAsync().Result;
+                var content =await response.Content.ReadAsStringAsync();
                 //读取用户信息
                 GetUserOutput output = JsonConvert.DeserializeObject<GetUserOutput>(content);
-                
-
+                UserDto user = output.User;
                 //todo 设置该网站状态为登陆成功
-                return Json(new
-                {
-                    CheckTokenResult = true,
-                    Msg = JArray.Parse(content)
-                });
+                //记录Session
+                HttpContext.Session.Set("CurrentUser", ByteConvertHelper.Object2Bytes(user));
+                //跳转到系统首页
+                return RedirectToAction("Index", "Home");
             }
         }
     }

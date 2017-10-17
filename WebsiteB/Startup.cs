@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace WebsiteB
 {
@@ -39,7 +41,8 @@ namespace WebsiteB
                     options.ApiName = "api1";
                 });
 
-            
+            //Session服务
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +51,9 @@ namespace WebsiteB
             //顺序不能错，先验证再路由，错了会授权失败
             //将身份验证中间件添加到管道中，以便在每次对主机的调用中自动执行身份验证
             app.UseAuthentication();
+
+            //Session
+            app.UseSession();
 
             if (env.IsDevelopment())
             {
