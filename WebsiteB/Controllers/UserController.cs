@@ -46,12 +46,18 @@ namespace WebsiteB.Controllers
                 //读取用户信息
                 GetUserOutput output = JsonConvert.DeserializeObject<GetUserOutput>(content);
                 UserDto user = output.User;
-                //todo 设置该网站状态为登陆成功
+                //设置该网站状态为登陆成功
                 //记录Session
                 HttpContext.Session.Set("CurrentUser", ByteConvertHelper.Object2Bytes(user));
                 //跳转到系统首页
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Remove("CurrentUser");
+            return RedirectToAction("LogIn", "User");
         }
     }
 }
