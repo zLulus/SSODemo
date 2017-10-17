@@ -22,4 +22,8 @@
     <None Include="wwwroot\js\User\LogIn.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cache\User\" />
+  </ItemGroup>
+
 </Project>
