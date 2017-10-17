@@ -14,11 +14,11 @@ namespace IdentityServerApi
 {
     public class Startup
     {
-        public new IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration _Configuration)
         {
-            Configuration = configuration;
+            Configuration = _Configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

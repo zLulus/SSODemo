@@ -1,6 +1,10 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Configuration.Memory;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +16,18 @@ namespace IdentityServerApi.Cache.User
     public class TokenCacheManager
     {
         private ConnectionMultiplexer redis { get; set; }
+        private IConfiguration Configuration { get; }
         private IDatabase db { get; set; }
 
         public TokenCacheManager()
         {
-            //todo 读取配置文件
-            redis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+            //读取配置文件appsettings.json
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
+            string redisConnection = Configuration.GetConnectionString("RedisConnection");
+            redis = ConnectionMultiplexer.Connect(redisConnection);
             db = redis.GetDatabase();
         }
 
