@@ -11,6 +11,7 @@ using Model.Dtos;
 using Model.Models;
 using AutoMapper;
 using BLL;
+using BLL.Encrypting;
 
 namespace IdentityServerApi.Controllers
 {
@@ -36,8 +37,8 @@ namespace IdentityServerApi.Controllers
             var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
 
             // request token
+            input.Password= MD5Encrypting.MD5Encoding(input.Password);
             var tokenClient = new TokenClient(disco.TokenEndpoint, input.Account, input.Password);
-            //var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
             var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
 
             if (tokenResponse.IsError)
@@ -52,9 +53,12 @@ namespace IdentityServerApi.Controllers
             else
             {
                 //登录成功
+                UserManager manager = new UserManager();
+                User user = manager.QueryUserByAccount(input.Account);
                 TokenCacheManager tokenCacheManager = new TokenCacheManager();
                 //todo 如何缓存失败呢？
-                bool r = tokenCacheManager.InsertToken(tokenResponse.AccessToken, "admin");
+                //缓存token-userId
+                bool r = tokenCacheManager.InsertToken(tokenResponse.AccessToken, user.Id.ToString());
                 string url = $"http://localhost:5001/User/CheckToken?token={tokenResponse.AccessToken}";
                 return Json(new
                 {
@@ -115,6 +119,7 @@ namespace IdentityServerApi.Controllers
             }
             User user= Mapper.Map<AddUserDto, User>(input);
             bool result= manager.AddUser(user);
+            //todo 新增用户之后，要更新Clients列表
             return Json(new
             {
                 AddUserResult = result,

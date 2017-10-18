@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using BLL.Encrypting;
+using DAL;
 using Model.EntityFramework;
 using Model.Models;
 using System;
@@ -12,7 +13,7 @@ namespace BLL
     {
         public bool AddUser(User user)
         {
-            //todo 密码加密
+            user.Password = MD5Encrypting.MD5Encoding(user.Password);
             CommonDAL<User> dal = new CommonDAL<User>();
             return dal.Add(user);
         }
