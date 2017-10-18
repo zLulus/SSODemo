@@ -21,7 +21,7 @@ namespace Model.EntityFramework
             //    .AddJsonFile("appsettings.json");
             //Configuration = builder.Build();
             string sqlserverConnection = Configuration.GetConnectionString("SSODemoConnection");
-            optionsBuilder.UseSqlServer("User ID=sa;Password=Woshizenglu9501;Host=115.28.102.108;Database=SSODemoDb;");
+            optionsBuilder.UseSqlServer("server=115.28.102.108;uid=sa;pwd=Woshizenglu9501;database=SSODemoDb;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

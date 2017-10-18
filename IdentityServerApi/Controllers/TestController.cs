@@ -43,5 +43,12 @@ namespace IdentityServerApi.Controllers
             });
             return Json("");
         }
+
+        public IActionResult QueryUser()
+        {
+            UserManager manager = new UserManager();
+            var u= manager.QueryUserById(2);
+            return Json("");
+        }
     }
 }
