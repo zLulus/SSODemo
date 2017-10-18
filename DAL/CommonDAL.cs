@@ -41,6 +41,7 @@ namespace DAL
 
         public T Query(T entity)
         {
+            //.net core里面没有CreateObjectSet这个方法，没有办法泛型...┭┮﹏┭┮
             //SSOContext db = new SSOContext();
             //return db.CreateObjectSet<T>().
             return null;

@@ -1,4 +1,6 @@
-﻿using IdentityServer4.Models;
+﻿using BLL;
+using IdentityServer4.Models;
+using Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,21 +30,39 @@ namespace IdentityServerApi
             // client credentials client
             //定义可以访问该API的客户端
             //对于这个场景，客户端将不会有一个交互的用户，并将使用标识服务器的所谓客户端机密进行身份验证
-            return new List<Client>
+            UserManager manager = new UserManager();
+            List<User> users = manager.GetAllUsers();
+            List<Client> clients = new List<Client>();
+            foreach(var user in users)
             {
-                new Client
+                clients.Add(new Client
                 {
-                    ClientId = "client",
+                    ClientId = user.Account,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(user.Password.Sha256())
                     },
                     //这里是允许访问的资源
                     AllowedScopes = { "api1" }
-                }
-            };
+                });
+            }
+            return clients;
+            //return new List<Client>
+            //{
+            //    new Client
+            //    {
+            //        ClientId = "client",
+            //        AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+            //        ClientSecrets =
+            //        {
+            //            new Secret("secret".Sha256())
+            //        },
+            //        //这里是允许访问的资源
+            //        AllowedScopes = { "api1" }
+            //    }
+            //};
         }
     }
 }

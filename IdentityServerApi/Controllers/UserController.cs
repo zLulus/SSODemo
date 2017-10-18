@@ -10,6 +10,7 @@ using IdentityServerApi.Cache.User;
 using Model.Dtos;
 using Model.Models;
 using AutoMapper;
+using BLL;
 
 namespace IdentityServerApi.Controllers
 {
@@ -31,46 +32,34 @@ namespace IdentityServerApi.Controllers
         /// <returns></returns>
         public async Task<IActionResult> TryLogIn(LogInDto input)
         {
-            if(input.Account=="admin" && input.Password == "123456")
-            {
-                // discover endpoints from metadata
-                var disco =await DiscoveryClient.GetAsync("http://localhost:5000");
+            // discover endpoints from metadata
+            var disco = await DiscoveryClient.GetAsync("http://localhost:5000");
 
-                //todo 应该把user加载到client列表里面，然后查询
-                // request token
-                //var tokenClient = new TokenClient(disco.TokenEndpoint, input.Account, input.Password);
-                var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
-                var tokenResponse =await tokenClient.RequestClientCredentialsAsync("api1");
+            // request token
+            var tokenClient = new TokenClient(disco.TokenEndpoint, input.Account, input.Password);
+            //var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
+            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
 
-                if (tokenResponse.IsError)
-                {
-                    Console.WriteLine(tokenResponse.Error);
-                    return Json(new
-                    {
-                        LogResult = false,
-                        Msg = tokenResponse.Error
-                    });
-                }
-                else
-                {
-                    //登录成功
-                    TokenCacheManager tokenCacheManager = new TokenCacheManager();
-                    //todo 如何缓存失败呢？
-                    bool r = tokenCacheManager.InsertToken(tokenResponse.AccessToken, "admin");
-                    string url = $"http://localhost:5001/User/CheckToken?token={tokenResponse.AccessToken}";
-                    return Json(new
-                    {
-                        LogResult = true,
-                        Msg = url
-                    });
-                }
-            }
-            else
+            if (tokenResponse.IsError)
             {
+                Console.WriteLine(tokenResponse.Error);
                 return Json(new
                 {
                     LogResult = false,
-                    Msg = "登录失败"
+                    Msg = tokenResponse.Error
+                });
+            }
+            else
+            {
+                //登录成功
+                TokenCacheManager tokenCacheManager = new TokenCacheManager();
+                //todo 如何缓存失败呢？
+                bool r = tokenCacheManager.InsertToken(tokenResponse.AccessToken, "admin");
+                string url = $"http://localhost:5001/User/CheckToken?token={tokenResponse.AccessToken}";
+                return Json(new
+                {
+                    LogResult = true,
+                    Msg = url
                 });
             }
         }
@@ -96,12 +85,8 @@ namespace IdentityServerApi.Controllers
             TokenCacheManager tokenCacheManager = new TokenCacheManager();
             string userId= tokenCacheManager.GetUserId(token);
             //查询用户信息
-            //todo 数据库
-            User u = new User()
-            {
-                Id = 1,
-                Account = "admin"
-            };
+            UserManager manager = new UserManager();
+            User u = manager.QueryUserById(long.Parse(userId));
             UserDto dto= Mapper.Map<User, UserDto>(u);
             return Json(new GetUserOutput()
             {
@@ -118,16 +103,22 @@ namespace IdentityServerApi.Controllers
 
         public IActionResult TryAddUser(AddUserDto input)
         {
-            //todo 
+            UserManager manager = new UserManager();
+            User existUser= manager.QueryUserByAccount(input.Account);
+            if (existUser != null)
+            {
+                return Json(new
+                {
+                    AddUserResult = false,
+                    Msg = "当前用户名已存在"
+                });
+            }
+            User user= Mapper.Map<AddUserDto, User>(input);
+            bool result= manager.AddUser(user);
             return Json(new
             {
-                AddUserResult=false,
-                Msg="注册失败"
-            });
-            return Json(new
-            {
-                AddUserResult = true,
-                Msg = "/User/LogIn"
+                AddUserResult = result,
+                Msg = result? "/User/LogIn": "注册失败"
             });
         }
     }

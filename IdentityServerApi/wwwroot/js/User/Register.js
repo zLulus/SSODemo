@@ -1,4 +1,4 @@
-﻿function tryLogIn() {
+﻿function tryAddUser() {
     var account = $("#account").val();
     var password = $("#password").val();
     var repeatPassword = $("#repeatPassword").val();

@@ -17,11 +17,27 @@ namespace BLL
             return dal.Add(user);
         }
 
-        public User QueryUserById(int Id)
+        public User QueryUserById(long Id)
         {
             using (SSOContext db = new SSOContext())
             {
                 return db.Users.Where(x => x.Id == Id).FirstOrDefault();
+            }
+        }
+
+        public User QueryUserByAccount(string account)
+        {
+            using (SSOContext db = new SSOContext())
+            {
+                return db.Users.Where(x => x.Account == account).FirstOrDefault();
+            }
+        }
+
+        public List<User> GetAllUsers()
+        {
+            using (SSOContext db = new SSOContext())
+            {
+                return db.Users.ToList();
             }
         }
     }

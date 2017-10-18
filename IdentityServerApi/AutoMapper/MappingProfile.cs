@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IdentityServerApi.Dtos;
 using Model.Dtos;
 using Model.Models;
 using System;
@@ -15,6 +16,8 @@ namespace IdentityServerApi.AutoMapper
             // Add as many of these lines as you need to map your objects
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<AddUserDto, User>();
+            CreateMap<User, AddUserDto>();
         }
     }
 }
