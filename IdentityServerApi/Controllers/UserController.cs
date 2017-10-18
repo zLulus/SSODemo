@@ -110,5 +110,25 @@ namespace IdentityServerApi.Controllers
                 User= dto
             });
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        public IActionResult TryAddUser(AddUserDto input)
+        {
+            //todo 
+            return Json(new
+            {
+                AddUserResult=false,
+                Msg="注册失败"
+            });
+            return Json(new
+            {
+                AddUserResult = true,
+                Msg = "/User/LogIn"
+            });
+        }
     }
 }
