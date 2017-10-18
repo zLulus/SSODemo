@@ -16,7 +16,7 @@ namespace IdentityServerApi.Cache.User
     public class TokenCacheManager
     {
         private ConnectionMultiplexer redis { get; set; }
-        private IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; set; }
         private IDatabase db { get; set; }
 
         public TokenCacheManager()

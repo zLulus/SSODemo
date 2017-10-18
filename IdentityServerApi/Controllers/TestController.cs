@@ -7,6 +7,7 @@ using IdentityServerApi.Cache;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using StackExchange.Redis;
+using BLL;
 
 namespace IdentityServerApi.Controllers
 {
@@ -29,6 +30,17 @@ namespace IdentityServerApi.Controllers
             saveValue = db.StringGet("mykey");
             bool r3 = db.KeyDelete("mykey");
             string uncacheValue = db.StringGet("mykey");
+            return Json("");
+        }
+
+        public IActionResult AddUser()
+        {
+            UserManager manager = new UserManager();
+            manager.AddUser(new Model.Models.User()
+            {
+                Account="001",
+                Password="aaaaa"
+            });
             return Json("");
         }
     }
