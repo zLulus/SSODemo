@@ -60,7 +60,10 @@ namespace WebsiteB.Controllers
 
         public IActionResult LogOut()
         {
+            //移除Session
             HttpContext.Session.Remove("CurrentUser");
+            HttpContext.Session.Remove("Account");
+            HttpContext.Session.Remove("UserId");
             return RedirectToAction("LogIn", "User");
         }
     }
