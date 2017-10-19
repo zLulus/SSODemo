@@ -34,7 +34,6 @@ namespace IdentityServerApi
                 //范围定义了您系统中的API资源列表
                 .AddInMemoryApiResources(Config.GetApiResources())
                 //客户Client列表
-                //todo 不能存在内存里面，太多
                 .AddInMemoryClients(Config.GetClients());
 
             //AutoMapper
