@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Model.Models;
 using Microsoft.AspNetCore.Identity;
 using WebsiteB.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace WebsiteB.Controllers
 {
@@ -49,6 +50,9 @@ namespace WebsiteB.Controllers
                 //设置该网站状态为登陆成功
                 //记录Session
                 HttpContext.Session.Set("CurrentUser", ByteConvertHelper.Object2Bytes(user));
+                //存储用户信息
+                HttpContext.Session.SetString("Account", user.Account);
+                HttpContext.Session.SetString("UserId", user.Id.ToString());
                 //跳转到系统首页
                 return RedirectToAction("Index", "Home");
             }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebsiteB.Models;
 using Microsoft.AspNetCore.Authorization;
 using WebsiteB.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace WebsiteB.Controllers
 {
@@ -14,6 +15,7 @@ namespace WebsiteB.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Account= HttpContext.Session.GetString("Account");
             return View();
         }
 
