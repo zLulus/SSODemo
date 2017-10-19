@@ -12,6 +12,8 @@ using Model.Models;
 using AutoMapper;
 using BLL;
 using BLL.Encrypting;
+using Microsoft.Extensions.DependencyInjection;
+using IdentityServer4.Models;
 
 namespace IdentityServerApi.Controllers
 {
@@ -105,7 +107,7 @@ namespace IdentityServerApi.Controllers
             return View();
         }
 
-        public IActionResult TryAddUser(AddUserDto input)
+        public IActionResult TryAddUser(ServiceCollection services,AddUserDto input)
         {
             UserManager manager = new UserManager();
             User existUser= manager.QueryUserByAccount(input.Account);
@@ -120,6 +122,11 @@ namespace IdentityServerApi.Controllers
             User user= Mapper.Map<AddUserDto, User>(input);
             bool result= manager.AddUser(user);
             //todo 新增用户之后，要更新Clients列表
+            //https://identityserver4.readthedocs.io/en/release/quickstarts/8_entity_framework.html
+            //https://github.com/2020IP/TwentyTwenty.IdentityServer4.EntityFrameworkCore
+            //看identityserver4 ef的那个demo
+            var clients = Config.GetClients();
+            //services.Remove(new ServiceDescriptor(Client)
             return Json(new
             {
                 AddUserResult = result,
