@@ -125,6 +125,7 @@ namespace IdentityServerApi.Controllers
             //https://identityserver4.readthedocs.io/en/release/quickstarts/8_entity_framework.html
             //https://github.com/2020IP/TwentyTwenty.IdentityServer4.EntityFrameworkCore
             //看identityserver4 ef的那个demo
+            //identityserver add client
             var clients = Config.GetClients();
             //services.Remove(new ServiceDescriptor(Client)
             return Json(new
