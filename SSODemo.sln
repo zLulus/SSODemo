@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerWithAspNetIde
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcClient", "MvcClient\MvcClient.csproj", "{01118012-A8D6-4860-8EA4-FE622F1CB9CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcClient2", "MvcClient2\MvcClient2.csproj", "{834C3B07-73DC-403B-901A-3C9776528F6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcClient2", "MvcClient2\MvcClient2.csproj", "{2C18129B-0C30-4C47-84CE-ACD0D35F3308}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{01118012-A8D6-4860-8EA4-FE622F1CB9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01118012-A8D6-4860-8EA4-FE622F1CB9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01118012-A8D6-4860-8EA4-FE622F1CB9CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{834C3B07-73DC-403B-901A-3C9776528F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{834C3B07-73DC-403B-901A-3C9776528F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{834C3B07-73DC-403B-901A-3C9776528F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{834C3B07-73DC-403B-901A-3C9776528F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C18129B-0C30-4C47-84CE-ACD0D35F3308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C18129B-0C30-4C47-84CE-ACD0D35F3308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C18129B-0C30-4C47-84CE-ACD0D35F3308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C18129B-0C30-4C47-84CE-ACD0D35F3308}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

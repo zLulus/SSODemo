@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Authentication;
+@{
+    ViewData["Title"] = "用户授权情况";
+}
+<h2>@ViewData["Title"]</h2>
+
+<h3>用户授权</h3>
+
+<div>
+    <a asp-action="CallApiUsingUserAccessToken">使用user token调用API</a>
+</div>
+<div>
+    <a asp-action="CallApiUsingClientCredentials">使用application identity调用API</a>
+</div>
+
+<dl>
+    @foreach (var claim in User.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+
+    }
+    <dt>access token</dt>
+    <dd>@await ViewContext.HttpContext.GetTokenAsync("access_token")</dd>
+
+    <dt>refresh token</dt>
+    <dd>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</dd>
+</dl>

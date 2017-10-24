@@ -62,8 +62,9 @@ namespace IdentityServerWithAspNetIdentity
                 // OpenID Connect hybrid flow and client credentials client (MVC)
                 new Client
                 {
+                    //ClientId不能重复
                     ClientId = "mvc",
-                    ClientName = "MVC Client",
+                    ClientName = "积微循环",
                     AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
 
                     RequireConsent = true,
@@ -75,6 +76,30 @@ namespace IdentityServerWithAspNetIdentity
 
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
                     PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    },
+                    AllowOfflineAccess = true
+                },
+                new Client
+                {
+                    ClientId = "mvc2",
+                    ClientName = "积微云采",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                    RequireConsent = true,
+
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = { "http://localhost:5003/signin-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5003/signout-callback-oidc" },
 
                     AllowedScopes =
                     {
