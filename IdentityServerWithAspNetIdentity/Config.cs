@@ -11,15 +11,20 @@ namespace IdentityServerWithAspNetIdentity
     public class Config
     {
         // scopes define the resources in your system
+        //资源
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new IdentityResources.Phone(),
+                new IdentityResources.Address(),
+                new IdentityResources.Email()
             };
         }
 
+        //api
         public static IEnumerable<ApiResource> GetApiResources()
         {
             return new List<ApiResource>
@@ -34,30 +39,30 @@ namespace IdentityServerWithAspNetIdentity
             // client credentials client
             return new List<Client>
             {
-                new Client
-                {
-                    ClientId = "client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                //new Client
+                //{
+                //    ClientId = "client",
+                //    AllowedGrantTypes = GrantTypes.ClientCredentials,
 
-                    ClientSecrets = 
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = { "api1" }
-                },
+                //    ClientSecrets = 
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
+                //    AllowedScopes = { "api1" }
+                //},
 
                 // resource owner password grant client
-                new Client
-                {
-                    ClientId = "ro.client",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                //new Client
+                //{
+                //    ClientId = "ro.client",
+                //    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                    ClientSecrets = 
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = { "api1" }
-                },
+                //    ClientSecrets = 
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
+                //    AllowedScopes = { "api1" }
+                //},
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
                 new Client
