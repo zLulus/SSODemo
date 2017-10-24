@@ -70,7 +70,7 @@ namespace MvcClient.Controllers
 
         public async Task<string> CallApiGetUserInfo()
         {
-            //todo 重定向到了login方法
+            //todo 重定向到了login方法  授权问题？
             //todo fiddler抓包？
             var client = new WebClient(){Proxy = new WebProxy(new Uri("http://localhost:8888"))};
             //todo 
