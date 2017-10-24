@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -66,19 +68,25 @@ namespace MvcClient.Controllers
             return View("json");
         }
 
-        public async Task<IActionResult> CallApiGetUserInfo(IConfiguration configuration)
+        public async Task<string> CallApiGetUserInfo()
         {
-            //todo
-            var apiUrl = configuration["ApiUrl"];
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            //todo 重定向到了login方法
+            var client = new WebClient(){Proxy = new WebProxy(new Uri("http://localhost:8888"))};
+            //todo 
+            var content = client.DownloadString($"http://localhost:5000/Account/GetUserInfo");
+            //var s = content.Content.ReadAsStringAsync().Result;
 
-            var client = new HttpClient();
-            client.SetBearerToken(accessToken);
-            //post
-            var content = await client.PostAsync($"{apiUrl}/identity/GetUserInfo",new StringContent(""));
+            ////todo
+            ////var apiUrl = configuration["ApiUrl"];
+            //var accessToken = await HttpContext.GetTokenAsync("access_token");
 
-            ViewBag.Json = JArray.Parse(content.Content.ReadAsStringAsync().Result).ToString();
-            return View("json");
+            //var client = new HttpClient();
+            //client.SetBearerToken(accessToken);
+            ////post
+            //var content = await client.PostAsync($"localhost:5001/identity",new StringContent(""));
+            
+            //ViewBag.Json = JArray.Parse(content.Content.ReadAsStringAsync().Result).ToString();
+            return content;
         }
     }
 }
