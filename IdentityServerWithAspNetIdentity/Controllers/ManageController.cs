@@ -381,7 +381,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             var model = new EnableAuthenticatorViewModel
             {
                 SharedKey = FormatKey(unformattedKey),
-                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey)
+                AuthenticatorUri = GenerateQrCodeUri(user.UserName, unformattedKey)
             };
 
             return View(model);
@@ -491,12 +491,12 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             return result.ToString().ToLowerInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
+        private string GenerateQrCodeUri(string userName, string unformattedKey)
         {
             return string.Format(
                 AuthenicatorUriFormat,
                 _urlEncoder.Encode("IdentityServerWithAspNetIdentity"),
-                _urlEncoder.Encode(email),
+                _urlEncoder.Encode(userName),
                 unformattedKey);
         }
 

@@ -9,8 +9,8 @@ namespace IdentityServerWithAspNetIdentity.Models.AccountViewModels
     public class ForgotPasswordViewModel
     {
         [Required]
-        //[EmailAddress]
-        public string Email { get; set; }
+        [Phone]
+        public string UserName { get; set; }
         public string VerificationCode { get; set; }
     }
 }

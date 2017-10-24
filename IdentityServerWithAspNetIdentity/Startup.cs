@@ -34,7 +34,9 @@ namespace IdentityServerWithAspNetIdentity
                 .AddDefaultTokenProviders();
 
             // Add application services.
+            //注入服务
             services.AddTransient<IEmailSender, EmailSender>();
+            //todo 注入发送短信的服务
 
             services.AddMvc();
 

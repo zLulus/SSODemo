@@ -9,8 +9,8 @@ namespace IdentityServerWithAspNetIdentity.Models.AccountViewModels
     public class LoginViewModel
     {
         [Required]
-        //[EmailAddress]
-        public string Email { get; set; }
+        [Phone]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
