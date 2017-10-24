@@ -31,6 +31,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
+        private readonly IMessageSender _messageSender;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -40,7 +41,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
-            IAuthenticationSchemeProvider schemeProvider
+            IAuthenticationSchemeProvider schemeProvider,
+            IMessageSender messageSender
         )
         {
             _userManager = userManager;
@@ -50,6 +52,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, schemeProvider, clientStore);
+            _messageSender = messageSender;
         }
 
         [TempData]
@@ -419,11 +422,14 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                //todo 短信
-                await _emailSender.SendEmailAsync(model.UserName, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                //var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+                //await _emailSender.SendEmailAsync(model.UserName, "Reset Password",
+                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                //短信验证码
+                //todo 测试
+                string code = _messageSender.GetRandomNums();
+                _messageSender.SendVerificationCode(user.UserName, code);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 

@@ -20,5 +20,18 @@ namespace Api.Controllers
         {
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
+
+        /// <summary>
+        /// 获得用户基本信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetUserInfo()
+        {
+            //todo
+            var r1 = User.Identities;
+            var r2 = User.Identity;
+            return new JsonResult(r1);
+        }
     }
 }
