@@ -4,6 +4,9 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Api.Controllers
 {
@@ -25,13 +28,16 @@ namespace Api.Controllers
         /// 获得用户基本信息
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetUserInfo()
+        [HttpPost]
+        public IActionResult Post()
         {
-            //todo
-            var r1 = User.Identities;
-            var r2 = User.Identity;
-            return new JsonResult(r1);
+            //api去identityserver查询用户信息
+            var client = new HttpClient();
+            //var content = client.PostAsync($"http://localhost:5000/Account/GetUserInfo",new StringContent("")).Result;
+            //todo 
+            var content = client.GetAsync($"http://localhost:5000/Account/GetUserInfo").Result;
+            var s = content.Content.ReadAsStringAsync().Result;
+            return new JsonResult(content);
         }
     }
 }

@@ -494,6 +494,13 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult GetUserInfo()
+        {
+            //根据ClaimsPrincipal查询user信息
+            return new JsonResult(_userManager.GetUserAsync(User).Result);
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)

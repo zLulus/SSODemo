@@ -45,6 +45,7 @@ namespace MvcClient.Controllers
 
             var client = new HttpClient();
             client.SetBearerToken(tokenResponse.AccessToken);
+            //get
             var content = await client.GetStringAsync($"{apiUrl}/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
@@ -58,6 +59,7 @@ namespace MvcClient.Controllers
 
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
+            //get
             var content = await client.GetStringAsync($"{apiUrl}/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
@@ -66,14 +68,16 @@ namespace MvcClient.Controllers
 
         public async Task<IActionResult> CallApiGetUserInfo(IConfiguration configuration)
         {
+            //todo
             var apiUrl = configuration["ApiUrl"];
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
-            var content = await client.GetStringAsync($"{apiUrl}/identity/GetUserInfo");
+            //post
+            var content = await client.PostAsync($"{apiUrl}/identity/GetUserInfo",new StringContent(""));
 
-            ViewBag.Json = JArray.Parse(content).ToString();
+            ViewBag.Json = JArray.Parse(content.Content.ReadAsStringAsync().Result).ToString();
             return View("json");
         }
     }
