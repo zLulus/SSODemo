@@ -10,7 +10,7 @@ namespace IdentityServerWithAspNetIdentity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<SendMessageLog> SendMessageLogs { get; set; }
+        //public DbSet<SendMessageLog> SendMessageLogs { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

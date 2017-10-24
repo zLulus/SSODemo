@@ -36,5 +36,10 @@ namespace IdentityServerWithAspNetIdentity.Models
         /// 是否发送成功
         /// </summary>
         public bool Sucess { get; set; }
+
+        /// <summary>
+        /// 是否已检测过
+        /// </summary>
+        public bool IsChecked { get; set; }
     }
 }

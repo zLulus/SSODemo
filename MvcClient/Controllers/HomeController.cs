@@ -63,5 +63,18 @@ namespace MvcClient.Controllers
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("json");
         }
+
+        public async Task<IActionResult> CallApiGetUserInfo(IConfiguration configuration)
+        {
+            var apiUrl = configuration["ApiUrl"];
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            client.SetBearerToken(accessToken);
+            var content = await client.GetStringAsync($"{apiUrl}/identity/GetUserInfo");
+
+            ViewBag.Json = JArray.Parse(content).ToString();
+            return View("json");
+        }
     }
 }
