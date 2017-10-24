@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using IdentityModel.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace MvcClient.Controllers
 {
@@ -18,13 +19,14 @@ namespace MvcClient.Controllers
         [Authorize]
         public IActionResult Secure()
         {
-            ViewData["Message"] = "Secure page.";
+            ViewData["Message"] = "查看授权页面";
 
             return View();
         }
 
         public async Task Logout()
         {
+            //使用的scheme
             await HttpContext.SignOutAsync("Cookies");
             await HttpContext.SignOutAsync("oidc");
         }
@@ -34,26 +36,29 @@ namespace MvcClient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> CallApiUsingClientCredentials()
+        public async Task<IActionResult> CallApiUsingClientCredentials(IConfiguration configuration)
         {
-            var tokenClient = new TokenClient("http://localhost:5000/connect/token", "mvc", "secret");
-            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
+            var authorityUrl = configuration["AuthorityUrl"];
+            var apiUrl = configuration["ApiUrl"];
+            var tokenClient = new TokenClient($"{authorityUrl}/connect/token", "mvc", "secret");
+            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("jwellApi");
 
             var client = new HttpClient();
             client.SetBearerToken(tokenResponse.AccessToken);
-            var content = await client.GetStringAsync("http://localhost:5001/identity");
+            var content = await client.GetStringAsync($"{apiUrl}/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("json");
         }
 
-        public async Task<IActionResult> CallApiUsingUserAccessToken()
+        public async Task<IActionResult> CallApiUsingUserAccessToken(IConfiguration configuration)
         {
+            var apiUrl = configuration["ApiUrl"];
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
-            var content = await client.GetStringAsync("http://localhost:5001/identity");
+            var content = await client.GetStringAsync($"{apiUrl}/identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("json");

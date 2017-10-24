@@ -27,15 +27,17 @@ namespace IdentityServerWithAspNetIdentity
         //api
         public static IEnumerable<ApiResource> GetApiResources()
         {
+            //这个是api的配置位置，目前只有一个
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("jwellApi", "积微循环API接口")
             };
         }
 
         // clients want to access resources (aka scopes)
         public static IEnumerable<Client> GetClients()
         {
+            //todo client存入数据库
             // client credentials client
             return new List<Client>
             {
@@ -48,7 +50,7 @@ namespace IdentityServerWithAspNetIdentity
                 //    {
                 //        new Secret("secret".Sha256())
                 //    },
-                //    AllowedScopes = { "api1" }
+                //    AllowedScopes = { "jwellApi" }
                 //},
 
                 // resource owner password grant client
@@ -61,7 +63,7 @@ namespace IdentityServerWithAspNetIdentity
                 //    {
                 //        new Secret("secret".Sha256())
                 //    },
-                //    AllowedScopes = { "api1" }
+                //    AllowedScopes = { "jwellApi" }
                 //},
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
@@ -86,7 +88,7 @@ namespace IdentityServerWithAspNetIdentity
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "jwellApi"
                     },
                     AllowOfflineAccess = true
                 },
@@ -110,7 +112,7 @@ namespace IdentityServerWithAspNetIdentity
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "jwellApi"
                     },
                     AllowOfflineAccess = true
                 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -7,12 +8,19 @@ namespace MvcClient
 {
     public class Startup
     {
+        public static IConfiguration Configuration { get; private set; }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            var authorityUrl = Configuration["AuthorityUrl"];
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = "Cookies";
@@ -23,7 +31,7 @@ namespace MvcClient
                 {
                     options.SignInScheme = "Cookies";
 
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = authorityUrl;
                     options.RequireHttpsMetadata = false;
 
                     options.ClientId = "mvc";
@@ -33,7 +41,7 @@ namespace MvcClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
 
-                    options.Scope.Add("api1");
+                    options.Scope.Add("jwellApi");
                     options.Scope.Add("offline_access");
                 });
         }

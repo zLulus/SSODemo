@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -7,6 +8,11 @@ namespace MvcClient
 {
     public class Startup
     {
+        public static IConfiguration Configuration { get; private set; }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -33,7 +39,7 @@ namespace MvcClient
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
 
-                    options.Scope.Add("api1");
+                    options.Scope.Add("jwellApi");
                     options.Scope.Add("offline_access");
                 });
         }

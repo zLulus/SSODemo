@@ -72,6 +72,7 @@ namespace IdentityServerWithAspNetIdentity
             app.UseStaticFiles();
 
             // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
+            //注意UseIdentityServer放在路由设置前面
             app.UseIdentityServer();
 
             app.UseMvc(routes =>
