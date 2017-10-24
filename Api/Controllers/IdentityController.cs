@@ -11,6 +11,10 @@ namespace Api.Controllers
     [Authorize]
     public class IdentityController : ControllerBase
     {
+        /// <summary>
+        /// 获得授权情况
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {

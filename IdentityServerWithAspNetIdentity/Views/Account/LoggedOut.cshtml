@@ -7,15 +7,14 @@
 
 <div class="page-header logged-out">
     <h1>
-        Logout
-        <small>You are now logged out</small>
+        注销
+        <small>你已经成功注销。</small>
     </h1>
 
     @if (Model.PostLogoutRedirectUri != null)
     {
         <div>
-            Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
-            <span>@Model.ClientName</span> application.
+            点击 <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">这里</a> 返回<span>@Model.ClientName</span>的首页。
         </div>
     }
 

@@ -21,14 +21,14 @@
             <form asp-action="Index" class="consent-form">
                 <input type="hidden" asp-for="ReturnUrl" />
 
-                <div>Uncheck the permissions you do not wish to grant.</div>
+                <div>取消您不希望授予的权限。</div>
                 
                 @if (Model.IdentityScopes.Any())
                 {
                     <div class="panel panel-default consent-buttons">
                         <div class="panel-heading">
                             <span class="glyphicon glyphicon-user"></span>
-                            Personal Information
+                            个人资料
                         </div>
                         <ul class="list-group">
                             @foreach (var scope in Model.IdentityScopes)
@@ -44,7 +44,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="glyphicon glyphicon-tasks"></span>
-                            Application Access
+                            应用授权
                         </div>
                         <ul class="list-group">
                             @foreach (var scope in Model.ResourceScopes)
@@ -60,14 +60,14 @@
                     <div class="consent-remember">
                         <label>
                             <input class="consent-scopecheck" asp-for="RememberConsent" />
-                            <strong>Remember My Decision</strong>
+                            <strong>记住我的选择</strong>
                         </label>
                     </div>
                 }
 
                 <div class="consent-buttons">
-                    <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                    <button name="button" value="no" class="btn">No, Do Not Allow</button>
+                    <button name="button" value="yes" class="btn btn-primary" autofocus>确定授权</button>
+                    <button name="button" value="no" class="btn">取消授权</button>
                     @if (Model.ClientUrl != null)
                     {
                         <a class="pull-right btn btn-default" target="_blank" href="@Model.ClientUrl">
