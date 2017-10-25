@@ -3,6 +3,7 @@
 
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServerWithAspNetIdentity.Services;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -10,6 +11,11 @@ namespace IdentityServerWithAspNetIdentity
 {
     public class Config
     {
+        private static IIdentityServer4ClientService identityServer4ClientService;
+        public Config(IIdentityServer4ClientService _identityServer4ClientService)
+        {
+            identityServer4ClientService = _identityServer4ClientService;
+        }
         // scopes define the resources in your system
         //资源
         public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -37,35 +43,8 @@ namespace IdentityServerWithAspNetIdentity
         // clients want to access resources (aka scopes)
         public static IEnumerable<Client> GetClients()
         {
-            //todo client存入数据库
-            // client credentials client
-            return new List<Client>
+            var clients = new List<Client>
             {
-                //new Client
-                //{
-                //    ClientId = "client",
-                //    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                //    ClientSecrets = 
-                //    {
-                //        new Secret("secret".Sha256())
-                //    },
-                //    AllowedScopes = { "jwellApi" }
-                //},
-
-                // resource owner password grant client
-                //new Client
-                //{
-                //    ClientId = "ro.client",
-                //    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
-                //    ClientSecrets = 
-                //    {
-                //        new Secret("secret".Sha256())
-                //    },
-                //    AllowedScopes = { "jwellApi" }
-                //},
-
                 // OpenID Connect hybrid flow and client credentials client (MVC)
                 new Client
                 {
@@ -76,7 +55,7 @@ namespace IdentityServerWithAspNetIdentity
 
                     RequireConsent = true,
 
-                    ClientSecrets = 
+                    ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
@@ -117,6 +96,14 @@ namespace IdentityServerWithAspNetIdentity
                     AllowOfflineAccess = true
                 }
             };
+            foreach(var client in clients)
+            {
+                identityServer4ClientService.InsertClient(client);
+            }
+            
+            //todo client存入数据库
+            // client credentials client
+            return clients;
         }
     }
 }

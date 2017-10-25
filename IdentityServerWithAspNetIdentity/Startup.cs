@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityServerWithAspNetIdentity.Data;
 using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Services;
+using AutoMapper;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -39,8 +40,13 @@ namespace IdentityServerWithAspNetIdentity
             //短信服务
             services.AddTransient<IMessageSender, MessageSender>();
             services.AddTransient<ISendMessageLogService, SendMessageLogService>();
+            //client服务
+            services.AddTransient<IIdentityServer4ClientService, IdentityServer4ClientService>();
 
             services.AddMvc();
+
+            //AutoMapper
+            services.AddAutoMapper();
 
             // configure identity server with in-memory stores, keys, clients and scopes
             services.AddIdentityServer()
