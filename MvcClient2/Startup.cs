@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration.Json;
+using MvcClient.Services;
 
 namespace MvcClient
 {
@@ -13,12 +16,18 @@ namespace MvcClient
         {
             Configuration = configuration;
         }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //添加服务
+            services.AddUrlResolve(Configuration);
+            //services.AddUrlResolve(Configuration["ApiUrl"]);
+            //services.Add(new ServiceDescriptor(typeof(ConfigurationRoot),(p)=> Configuration, ServiceLifetime.Singleton));
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            var authorityUrl = Configuration["AuthorityUrl"];
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = "Cookies";
@@ -29,9 +38,9 @@ namespace MvcClient
                 {
                     options.SignInScheme = "Cookies";
 
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = authorityUrl;
                     options.RequireHttpsMetadata = false;
-                    //这里对应在ieentityserver里面设置的ClientId
+                    //ClientId每个客户端不同
                     options.ClientId = "mvc2";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";

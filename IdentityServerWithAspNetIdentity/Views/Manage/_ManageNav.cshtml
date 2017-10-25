@@ -1,11 +1,13 @@
-﻿@using IdentityServerWithAspNetIdentity.Views.Manage
+﻿@using IdentityServerWithAspNetIdentity.Models
+@using IdentityServerWithAspNetIdentity.Views.Manage
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 
 <ul class="nav nav-pills nav-stacked">
-    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">个人资料</a></li>
+    @*<li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">个人资料</a></li>*@
     <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">修改密码</a></li>
     @*@if (hasExternalLogins)
     {
