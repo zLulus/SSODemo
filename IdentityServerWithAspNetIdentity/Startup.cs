@@ -38,6 +38,7 @@ namespace IdentityServerWithAspNetIdentity
             services.AddTransient<IEmailSender, EmailSender>();
             //短信服务
             services.AddTransient<IMessageSender, MessageSender>();
+            services.AddTransient<ISendMessageLogService, SendMessageLogService>();
 
             services.AddMvc();
 

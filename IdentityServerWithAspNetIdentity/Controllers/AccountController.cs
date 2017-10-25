@@ -32,6 +32,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
         private readonly IMessageSender _messageSender;
+        private readonly ISendMessageLogService _sendMessageLogService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -42,7 +43,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
             IAuthenticationSchemeProvider schemeProvider,
-            IMessageSender messageSender
+            IMessageSender messageSender,
+            ISendMessageLogService sendMessageLogService
         )
         {
             _userManager = userManager;
@@ -53,6 +55,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, schemeProvider, clientStore);
             _messageSender = messageSender;
+            _sendMessageLogService = sendMessageLogService;
         }
 
         [TempData]
@@ -406,6 +409,11 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 发送短信验证码
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -414,10 +422,13 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.UserName);
-                if (user == null || !(await _userManager.IsPhoneNumberConfirmedAsync(user)))
+
+                //if (user == null || !(await _userManager.IsPhoneNumberConfirmedAsync(user)))
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToAction(nameof(ForgotPasswordConfirmation));
+                    //用户不存在(或者手机未验证)，跳转注册页面
+                    return RedirectToAction(nameof(Register));
                 }
 
                 // For more information on how to enable account confirmation and password reset please
@@ -426,11 +437,22 @@ namespace IdentityServerWithAspNetIdentity.Controllers
                 //var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 //await _emailSender.SendEmailAsync(model.UserName, "Reset Password",
                 //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                //短信验证码
+                //用户存在，发送短信验证码
                 //todo 测试
                 string code = _messageSender.GetRandomNums();
-                _messageSender.SendVerificationCode(user.UserName, code);
-                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+                bool result= _messageSender.SendVerificationCode(user.UserName, code);
+                _sendMessageLogService.InsertSendMessageLog(new SendMessageLog()
+                {
+                    PhoneNumber=user.UserName,
+                    SmsCode=code,
+                    //有效时间是30min内
+                    InvalidTime=DateTime.Now.AddMinutes(30),
+                    Sucess=result,
+                    IsChecked=false
+                });
+                //todo 忘记密码流程
+                return View("/ForgotPasswordConfirmation", model);
+                //return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
             // If we got this far, something failed, redisplay form
@@ -439,21 +461,22 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPasswordConfirmation()
+        public IActionResult ForgotPasswordConfirmation(ForgotPasswordViewModel model)
         {
-            return View();
+            return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public IActionResult ResetPassword(ResetPasswordByGetViewModel model)
         {
-            if (code == null)
+            bool r= _sendMessageLogService.IsSmsCodeRight(model.UserName, model.Code);
+            if (!r)
             {
-                throw new ApplicationException("A code must be supplied for password reset.");
+                throw new ApplicationException("短信验证码错误!");
             }
-            var model = new ResetPasswordViewModel { Code = code };
-            return View(model);
+            ResetPasswordViewModel model2 = new ResetPasswordViewModel() { UserName=model.UserName };
+            return View(model2);
         }
 
         [HttpPost]
