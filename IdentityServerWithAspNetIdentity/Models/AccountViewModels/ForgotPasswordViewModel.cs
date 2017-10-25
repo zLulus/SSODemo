@@ -11,6 +11,13 @@ namespace IdentityServerWithAspNetIdentity.Models.AccountViewModels
         [Required]
         [Phone]
         public string UserName { get; set; }
+        /// <summary>
+        /// Token(用于更新密码)
+        /// </summary>
+        public string Code { get; set; }
+        /// <summary>
+        /// 短信验证码
+        /// </summary>
         public string VerificationCode { get; set; }
     }
 }

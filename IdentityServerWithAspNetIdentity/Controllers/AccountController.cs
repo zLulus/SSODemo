@@ -245,11 +245,11 @@ namespace IdentityServerWithAspNetIdentity.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-                    //todo 发送短信验证码
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.UserName, callbackUrl);
+                    //_logger.LogInformation("User created a new account with password.");
+                    //需要改为发送短信验证码
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    //await _emailSender.SendEmailConfirmationAsync(model.UserName, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
@@ -347,9 +347,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
                 // If the user does not have an account, then ask the user to create an account.
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
-                //todo
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLogin", new ExternalLoginViewModel { UserName = email });
+                var mobilePhone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
+                return View("ExternalLogin", new ExternalLoginViewModel { UserName = mobilePhone });
             }
         }
 
@@ -433,26 +432,35 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                //用于更新密码的token
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 //var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 //await _emailSender.SendEmailAsync(model.UserName, "Reset Password",
                 //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
                 //用户存在，发送短信验证码
-                //todo 测试
-                string code = _messageSender.GetRandomNums();
-                bool result= _messageSender.SendVerificationCode(user.UserName, code);
-                _sendMessageLogService.InsertSendMessageLog(new SendMessageLog()
+                string verificationCode = _messageSender.GetRandomNums();
+                bool result= _messageSender.SendVerificationCode(user.UserName, verificationCode);
+                if (result)
                 {
-                    PhoneNumber=user.UserName,
-                    SmsCode=code,
-                    //有效时间是30min内
-                    InvalidTime=DateTime.Now.AddMinutes(30),
-                    Sucess=result,
-                    IsChecked=false
-                });
-                //todo 忘记密码流程
-                return View("/ForgotPasswordConfirmation", model);
-                //return RedirectToAction(nameof(ForgotPasswordConfirmation));
+                    _sendMessageLogService.InsertSendMessageLog(new SendMessageLog()
+                    {
+                        PhoneNumber = user.UserName,
+                        SmsCode = verificationCode,
+                        //有效时间是30min内
+                        InvalidTime = DateTime.Now.AddMinutes(30),
+                        Sucess = result,
+                        IsChecked = false
+                    });
+                    //后台跳转另一个页面带参数
+                    return RedirectToRoute(new
+                    {
+                        controller = "Account",
+                        action = "ForgotPasswordConfirmation",
+                        UserName = model.UserName,
+                        Code = code
+                    });
+                }
+                
             }
 
             // If we got this far, something failed, redisplay form
@@ -470,12 +478,12 @@ namespace IdentityServerWithAspNetIdentity.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(ResetPasswordByGetViewModel model)
         {
-            bool r= _sendMessageLogService.IsSmsCodeRight(model.UserName, model.Code);
+            bool r= _sendMessageLogService.IsSmsCodeRight(model.UserName, model.VerificationCode);
             if (!r)
             {
                 throw new ApplicationException("短信验证码错误!");
             }
-            ResetPasswordViewModel model2 = new ResetPasswordViewModel() { UserName=model.UserName };
+            ResetPasswordViewModel model2 = new ResetPasswordViewModel() { UserName=model.UserName,Code=model.Code };
             return View(model2);
         }
 
