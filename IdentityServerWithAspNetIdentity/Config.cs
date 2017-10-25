@@ -96,12 +96,13 @@ namespace IdentityServerWithAspNetIdentity
                     AllowOfflineAccess = true
                 }
             };
-            foreach(var client in clients)
-            {
-                identityServer4ClientService.InsertClient(client);
-            }
-            
+
             //todo client存入数据库
+            //foreach (var client in clients)
+            //{
+            //    identityServer4ClientService.InsertClient(client);
+            //}
+            
             // client credentials client
             return clients;
         }

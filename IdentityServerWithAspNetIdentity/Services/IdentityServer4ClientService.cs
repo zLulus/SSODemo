@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace IdentityServerWithAspNetIdentity.Services
 {
+    /// <summary>
+    /// 管理IdentityServer4的Client
+    /// </summary>
     public class IdentityServer4ClientService: IIdentityServer4ClientService
     {
         private ApplicationDbContext dbContext { get; set; }

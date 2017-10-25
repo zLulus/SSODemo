@@ -11,9 +11,9 @@ using Api.Services;
 
 namespace Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     [Authorize]
-    public class IdentityController : ControllerBase
+    public class IdentityController : Controller
     {
         /// <summary>
         /// 获得授权情况
