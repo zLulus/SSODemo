@@ -495,6 +495,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
         }
 
         [HttpGet]
+        //[AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public IActionResult  GetUserInfo()
         {
             //根据ClaimsPrincipal查询user信息

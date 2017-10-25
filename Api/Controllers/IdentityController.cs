@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using Api.Services;
 
 namespace Api.Controllers
 {
@@ -29,13 +30,15 @@ namespace Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post(UrlResolveService urlResolveService)
         {
+            //todo 重定向到了login方法  授权问题？
+            //todo fiddler抓包？
             //api去identityserver查询用户信息
+            string authorityUrl = urlResolveService.GetAuthorityUrl();
             var client = new HttpClient();
-            //var content = client.PostAsync($"http://localhost:5000/Account/GetUserInfo",new StringContent("")).Result;
             //todo 
-            var content = client.GetAsync($"http://localhost:5000/Account/GetUserInfo").Result;
+            var content = client.GetAsync($"{authorityUrl}/Account/GetUserInfo").Result;
             var s = content.Content.ReadAsStringAsync().Result;
             return new JsonResult(content);
         }

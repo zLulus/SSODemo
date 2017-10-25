@@ -20,6 +20,8 @@ namespace MvcClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //添加服务
+            services.AddUrlResolve(Configuration);
             //services.AddUrlResolve(Configuration["ApiUrl"]);
             //services.Add(new ServiceDescriptor(typeof(ConfigurationRoot),(p)=> Configuration, ServiceLifetime.Singleton));
 
@@ -38,7 +40,7 @@ namespace MvcClient
 
                     options.Authority = authorityUrl;
                     options.RequireHttpsMetadata = false;
-
+                    //ClientId每个客户端不同
                     options.ClientId = "mvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";

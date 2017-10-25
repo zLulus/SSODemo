@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +23,8 @@ namespace Api
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
-
+            //添加服务
+            services.AddUrlResolve(Configuration);
             //读取配置文件
             var authorityUrl = Configuration["AuthorityUrl"];
             services.AddAuthentication("Bearer")

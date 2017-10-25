@@ -8,6 +8,7 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
+using MvcClient.Services;
 
 namespace MvcClient.Controllers
 {
@@ -38,10 +39,10 @@ namespace MvcClient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> CallApiUsingClientCredentials(IConfiguration configuration)
+        public async Task<IActionResult> CallApiUsingClientCredentials(UrlResolveService urlResolveService)
         {
-            var authorityUrl = configuration["AuthorityUrl"];
-            var apiUrl = configuration["ApiUrl"];
+            var authorityUrl = urlResolveService.GetAuthorityUrl();
+            var apiUrl = urlResolveService.GetApiUrl();
             var tokenClient = new TokenClient($"{authorityUrl}/connect/token", "mvc", "secret");
             var tokenResponse = await tokenClient.RequestClientCredentialsAsync("jwellApi");
 
@@ -54,9 +55,9 @@ namespace MvcClient.Controllers
             return View("json");
         }
 
-        public async Task<IActionResult> CallApiUsingUserAccessToken(IConfiguration configuration)
+        public async Task<IActionResult> CallApiUsingUserAccessToken(UrlResolveService urlResolveService)
         {
-            var apiUrl = configuration["ApiUrl"];
+            var apiUrl = urlResolveService.GetApiUrl();
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
@@ -68,26 +69,18 @@ namespace MvcClient.Controllers
             return View("json");
         }
 
-        public async Task<string> CallApiGetUserInfo()
+        public async Task<IActionResult> CallApiGetUserInfo(UrlResolveService urlResolveService)
         {
-            //todo 重定向到了login方法  授权问题？
-            //todo fiddler抓包？
-            var client = new WebClient(){Proxy = new WebProxy(new Uri("http://localhost:8888"))};
-            //todo 
-            var content = client.DownloadString($"http://localhost:5000/Account/GetUserInfo");
-            //var s = content.Content.ReadAsStringAsync().Result;
+            var apiUrl = urlResolveService.GetApiUrl();
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
 
-            ////todo 注入config服务
-            ////var apiUrl = configuration["ApiUrl"];
-            //var accessToken = await HttpContext.GetTokenAsync("access_token");
-
-            //var client = new HttpClient();
-            //client.SetBearerToken(accessToken);
-            ////post
-            //var content = await client.PostAsync($"localhost:5001/identity",new StringContent(""));
-            
-            //ViewBag.Json = JArray.Parse(content.Content.ReadAsStringAsync().Result).ToString();
-            return content;
+            var client = new HttpClient();
+            client.SetBearerToken(accessToken);
+            //post
+            var content = await client.PostAsync($"{apiUrl}/identity", new StringContent(""));
+            string str = await content.Content.ReadAsStringAsync();
+            ViewBag.Json = JArray.Parse(str).ToString();
+            return View("json");
         }
     }
 }
