@@ -11,20 +11,15 @@ using Api.Services;
 
 namespace Api.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     [Authorize]
-    public class IdentityController : Controller
+    public class IdentityController : ControllerBase
     {
-        /// <summary>
-        /// 获得授权情况
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
-
         /// <summary>
         /// 获得用户基本信息
         /// </summary>

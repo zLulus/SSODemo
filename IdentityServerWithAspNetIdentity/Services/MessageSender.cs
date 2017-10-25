@@ -13,7 +13,7 @@ namespace IdentityServerWithAspNetIdentity.Services
     {
         #region 发送短信变量
         // 设置为您的apikey(https://www.yunpian.com)可查
-        private static string apikey = "";
+        private static string apikey = "636dcd2a7689747a1d0cb0b8312aa2f9";
         // 智能模板发送短信url
         private static string url_send_sms = "https://sms.yunpian.com/v2/sms/single_send.json";
         // 指定模板发送短信url

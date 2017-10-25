@@ -48,9 +48,13 @@ namespace MvcClient.Controllers
 
             var client = new HttpClient();
             client.SetBearerToken(tokenResponse.AccessToken);
-            //get
-            var response = await client.GetAsync($"{apiUrl}/Identity/Get");
-            var content = await response.Content.ReadAsStringAsync();
+            //todo 修改为/controllr/action
+            //不能多1个/
+            var content = await client.GetStringAsync($"{apiUrl}identity");
+            //var client = new HttpClient();
+            //client.SetBearerToken(tokenResponse.AccessToken);
+            ////get
+            //var content = await client.GetStringAsync($"{apiUrl}/identity");
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("json");
         }
@@ -63,7 +67,7 @@ namespace MvcClient.Controllers
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
             //get
-            var content = await client.GetStringAsync($"{apiUrl}/Identity/Get");
+            var content = await client.GetStringAsync($"{apiUrl}identity");
 
             ViewBag.Json = JArray.Parse(content).ToString();
             return View("json");
@@ -77,7 +81,7 @@ namespace MvcClient.Controllers
             var client = new HttpClient();
             client.SetBearerToken(accessToken);
             //post
-            var content = await client.PostAsync($"{apiUrl}/Identity/Post", new StringContent(""));
+            var content = await client.PostAsync($"{apiUrl}identity", new StringContent(""));
             string str = await content.Content.ReadAsStringAsync();
             ViewBag.Json = JArray.Parse(str).ToString();
             return View("json");
