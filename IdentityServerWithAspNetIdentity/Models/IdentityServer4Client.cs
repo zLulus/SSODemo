@@ -16,17 +16,18 @@ namespace IdentityServerWithAspNetIdentity.Models
         public string ClientId { get; set; }
         public string ClientName { get; set; }
         /// <summary>
-        /// 保存ICollection<string>，以;分割
+        /// 诸如AllowedGrantTypes、ClientSecrets，以字典形式存入，再序列化
         /// </summary>
-        public ICollection<string> AllowedGrantTypes { get; set; }
+        public string DictionaryJson { get; set; }
         public bool RequireConsent { get; set; }
+        public bool AllowOfflineAccess { get; set; }
         /// <summary>
         /// 仅保存value部分
         /// </summary>
-        public ICollection<string> ClientSecrets { get; set; }
-        public ICollection<string> RedirectUris { get; set; }
-        public ICollection<string> PostLogoutRedirectUris { get; set; }
-        public ICollection<string> AllowedScopes { get; set; }
-        public bool AllowOfflineAccess { get; set; }
+        //public ICollection<string> ClientSecrets { get; set; }
+        //public ICollection<string> RedirectUris { get; set; }
+        //public ICollection<string> PostLogoutRedirectUris { get; set; }
+        //public ICollection<string> AllowedScopes { get; set; }
+        //public ICollection<string> AllowedGrantTypes { get; set; }
     }
 }
