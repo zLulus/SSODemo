@@ -495,7 +495,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserInfo()
+        public IActionResult  GetUserInfo()
         {
             //根据ClaimsPrincipal查询user信息
             return new JsonResult(_userManager.GetUserAsync(User).Result);

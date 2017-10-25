@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration.Json;
+using MvcClient.Services;
 
 namespace MvcClient
 {
@@ -17,8 +20,10 @@ namespace MvcClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //services.AddUrlResolve(Configuration["ApiUrl"]);
+            //services.Add(new ServiceDescriptor(typeof(ConfigurationRoot),(p)=> Configuration, ServiceLifetime.Singleton));
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             var authorityUrl = Configuration["AuthorityUrl"];
             services.AddAuthentication(options =>
