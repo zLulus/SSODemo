@@ -12,7 +12,7 @@ namespace IdentityServerWithAspNetIdentity.Data
     {
         //自己的表
         public DbSet<SendMessageLog> SendMessageLogs { get; set; }
-        public DbSet<IdentityServer4Client> IdentityServer4Clients { get; set; }
+        //public DbSet<IdentityServer4Client> IdentityServer4Clients { get; set; }
         //identityserver的表
         //public DbSet<ApiResource> ApiResources { get; set; }
         //public DbSet<ApiResourceClaim> ApiResourceClaims { get; set; }

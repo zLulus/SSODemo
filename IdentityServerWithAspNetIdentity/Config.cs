@@ -6,16 +6,12 @@ using IdentityServer4.Models;
 using IdentityServerWithAspNetIdentity.Services;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityServerWithAspNetIdentity
 {
     public class Config
     {
-        private static IIdentityServer4ClientService identityServer4ClientService;
-        public Config(IIdentityServer4ClientService _identityServer4ClientService)
-        {
-            identityServer4ClientService = _identityServer4ClientService;
-        }
         // scopes define the resources in your system
         //资源
         public static IEnumerable<IdentityResource> GetIdentityResources()
@@ -41,16 +37,54 @@ namespace IdentityServerWithAspNetIdentity
         }
 
         // clients want to access resources (aka scopes)
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(IConfiguration Configuration)
         {
+            var urls = Configuration["ClientUrls"].Split(';');
+            List<string> redirectUris = new List<string>();
+            List<string> postLogoutRedirectUris = new List<string>();
+            foreach (var url in urls)
+            {
+                redirectUris.Add($"{url}/signin-oid");
+                postLogoutRedirectUris.Add($"{url}/signout-callback-oidc");
+            }
+            //只用一个client,所有客户端共用
             var clients = new List<Client>
             {
                 // OpenID Connect hybrid flow and client credentials client (MVC)
+                //new Client
+                //{
+                //    //ClientId不能重复
+                //    ClientId = "mvc",
+                //    ClientName = "积微物联",
+                //    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                //    RequireConsent = true,
+
+                //    ClientSecrets =
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
+                //    //这里写入配置文件,以分好隔开,几个客户端就用几个网址
+                //    RedirectUris =redirectUris,
+                //    PostLogoutRedirectUris =postLogoutRedirectUris,
+
+                //    AllowedScopes =
+                //    {
+                //        IdentityServerConstants.StandardScopes.OpenId,
+                //        IdentityServerConstants.StandardScopes.Profile,
+                //        IdentityServerConstants.StandardScopes.Address,
+                //        IdentityServerConstants.StandardScopes.Email,
+                //        IdentityServerConstants.StandardScopes.OfflineAccess,
+                //        IdentityServerConstants.StandardScopes.Phone,
+                //        "jwellApi"
+                //    },
+                //    AllowOfflineAccess = true
+                //},
                 new Client
                 {
                     //ClientId不能重复
                     ClientId = "mvc",
-                    ClientName = "积微循环",
+                    ClientName = "积微物联",
                     AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
 
                     RequireConsent = true,
@@ -59,42 +93,54 @@ namespace IdentityServerWithAspNetIdentity
                     {
                         new Secret("secret".Sha256())
                     },
-                    //todo 暂时写死
-                    RedirectUris = { "http://115.28.102.108:5002/signin-oidc" },
-                    PostLogoutRedirectUris = { "http://115.28.102.108:5002/signout-callback-oidc" },
+                    //这里写入配置文件,以分好隔开,几个客户端就用几个网址
+                    RedirectUris =
+                    {
+                        "http://localhst:5002/signin-oidc",
+                        "http://localhst:5003/signin-oidc" 
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        "http://localhst:5002/signout-callback-oidc",
+                        "http://localhst:5003/signout-callback-oidc"
+                    },
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        //IdentityServerConstants.StandardScopes.Address,
+                        //IdentityServerConstants.StandardScopes.Email,
+                        //IdentityServerConstants.StandardScopes.OfflineAccess,
+                        //IdentityServerConstants.StandardScopes.Phone,
                         "jwellApi"
                     },
                     AllowOfflineAccess = true
                 },
-                new Client
-                {
-                    ClientId = "mvc2",
-                    ClientName = "积微云采",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                //new Client
+                //{
+                //    ClientId = "mvc2",
+                //    ClientName = "积微云采",
+                //    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
 
-                    RequireConsent = true,
+                //    RequireConsent = true,
 
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
+                //    ClientSecrets =
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
 
-                    RedirectUris = { "http://115.28.102.108:5003/signin-oidc" },
-                    PostLogoutRedirectUris = { "http://115.28.102.108:5003/signout-callback-oidc" },
+                //    RedirectUris = { "http://115.28.102.108:5003/signin-oidc" },
+                //    PostLogoutRedirectUris = { "http://115.28.102.108:5003/signout-callback-oidc" },
 
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "jwellApi"
-                    },
-                    AllowOfflineAccess = true
-                }
+                //    AllowedScopes =
+                //    {
+                //        IdentityServerConstants.StandardScopes.OpenId,
+                //        IdentityServerConstants.StandardScopes.Profile,
+                //        "jwellApi"
+                //    },
+                //    AllowOfflineAccess = true
+                //}
             };
 
             //todo client存入数据库

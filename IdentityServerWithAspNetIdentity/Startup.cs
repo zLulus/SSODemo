@@ -37,14 +37,29 @@ namespace IdentityServerWithAspNetIdentity
                 //.AddEntityFrameworkStores<ConfigurationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //aspuser password policy  修改密码的相关规则
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 6;
+            });
+
+
             // Add application services.
             //注入服务
             services.AddTransient<IEmailSender, EmailSender>();
             //短信服务
             services.AddTransient<IMessageSender, MessageSender>();
             services.AddTransient<ISendMessageLogService, SendMessageLogService>();
+            //config
+            services.AddUrlResolve(Configuration);
             //client服务
-            services.AddTransient<IIdentityServer4ClientService, IdentityServer4ClientService>();
+            //services.AddTransient<IIdentityServer4ClientService, IdentityServer4ClientService>();
 
             services.AddMvc();
 
@@ -57,7 +72,7 @@ namespace IdentityServerWithAspNetIdentity
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryClients(Config.GetClients(Configuration))
                 .AddAspNetIdentity<ApplicationUser>();
 
             services.AddAuthentication()

@@ -41,7 +41,7 @@ namespace MvcClient
                     options.Authority = authorityUrl;
                     options.RequireHttpsMetadata = false;
                     //ClientId每个客户端不同
-                    options.ClientId = "mvc2";
+                    options.ClientId = "mvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";
 

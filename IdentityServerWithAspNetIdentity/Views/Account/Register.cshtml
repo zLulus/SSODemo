@@ -18,12 +18,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password">密码</label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control" type="password"/>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ConfirmPassword">再次输入密码</label>
-                <input asp-for="ConfirmPassword" class="form-control" />
+                <input asp-for="ConfirmPassword" class="form-control" type="password"/>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">注册</button>
