@@ -38,7 +38,7 @@ namespace MvcClient
                 {
                     options.SignInScheme = "Cookies";
 
-                    options.Authority = authorityUrl;
+                    options.Authority = authorityUrl;    //这里是identityserver的网站
                     options.RequireHttpsMetadata = false;
                     //ClientId每个客户端不同
                     options.ClientId = "mvc";
@@ -50,7 +50,7 @@ namespace MvcClient
 
                     options.Scope.Add("jwellApi");
                     options.Scope.Add("offline_access");
-                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

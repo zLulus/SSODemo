@@ -41,10 +41,15 @@ namespace IdentityServerWithAspNetIdentity
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
+                //是否要求有数字
                 options.Password.RequireDigit = false;
+                //密码要求的最小长度
                 options.Password.RequiredLength = 6;
+                //是否要求有非字母数字的字符
                 options.Password.RequireNonAlphanumeric = false;
+                //是否要求有大写的ASCII字母
                 options.Password.RequireUppercase = false;
+                //是否要求有小写的ASCII字母
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredUniqueChars = 6;
             });
