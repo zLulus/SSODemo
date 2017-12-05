@@ -12,6 +12,8 @@ using IdentityServerWithAspNetIdentity.Data;
 using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Services;
 using AutoMapper;
+using IdentityServer4.Validation;
+using IdentityServer4.Services;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -78,7 +80,11 @@ namespace IdentityServerWithAspNetIdentity
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients(Configuration))
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddProfileService<ProfileService>();
+
+            services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+            services.AddTransient<IProfileService, ProfileService>();
 
             services.AddAuthentication()
                 .AddGoogle(options =>

@@ -12,12 +12,12 @@ namespace IdentityServerWithAspNetIdentity.Services
         //http://docs.identityserver.io/en/release/endpoints/userinfo.html
         //https://github.com/IdentityServer/IdentityServer4.Samples/issues/5
         //services
-        private readonly IUserRepository _userRepository;
+        //private readonly IUserRepository _userRepository;
 
-        public ProfileService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        //public ProfileService(IUserRepository userRepository)
+        //{
+        //    _userRepository = userRepository;
+        //}
 
         //Get user profile date in terms of claims when calling /connect/userinfo
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -28,15 +28,15 @@ namespace IdentityServerWithAspNetIdentity.Services
                 if (!string.IsNullOrEmpty(context.Subject.Identity.Name))
                 {
                     //get user from db (in my case this is by email)
-                    var user = await _userRepository.FindAsync(context.Subject.Identity.Name);
+                    //var user = await _userRepository.FindAsync(context.Subject.Identity.Name);
 
-                    if (user != null)
-                    {
-                        var claims = GetUserClaims(user);
+                    //if (user != null)
+                    //{
+                    //    var claims = GetUserClaims(user);
 
-                        //set issued claims to return
-                        context.IssuedClaims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
-                    }
+                    //    //set issued claims to return
+                    //    context.IssuedClaims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
+                    //}
                 }
                 else
                 {
@@ -47,15 +47,15 @@ namespace IdentityServerWithAspNetIdentity.Services
                     if (!string.IsNullOrEmpty(userId?.Value) && long.Parse(userId.Value) > 0)
                     {
                         //get user from db (find user by user id)
-                        var user = await _userRepository.FindAsync(long.Parse(userId.Value));
+                        //var user = await _userRepository.FindAsync(long.Parse(userId.Value));
 
-                        // issue the claims for the user
-                        if (user != null)
-                        {
-                            var claims = ResourceOwnerPasswordValidator.GetUserClaims(user);
+                        //// issue the claims for the user
+                        //if (user != null)
+                        //{
+                        //    var claims = ResourceOwnerPasswordValidator.GetUserClaims(user);
 
-                            context.IssuedClaims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
-                        }
+                        //    context.IssuedClaims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
+                        //}
                     }
                 }
             }
@@ -75,15 +75,15 @@ namespace IdentityServerWithAspNetIdentity.Services
 
                 if (!string.IsNullOrEmpty(userId?.Value) && long.Parse(userId.Value) > 0)
                 {
-                    var user = await _userRepository.FindAsync(long.Parse(userId.Value));
+                    //var user = await _userRepository.FindAsync(long.Parse(userId.Value));
 
-                    if (user != null)
-                    {
-                        if (user.IsActive)
-                        {
-                            context.IsActive = user.IsActive;
-                        }
-                    }
+                    //if (user != null)
+                    //{
+                    //    if (user.IsActive)
+                    //    {
+                    //        context.IsActive = user.IsActive;
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
